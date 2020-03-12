@@ -33,15 +33,18 @@ public class OrderedListTest {
 
     @Test
     public void find() {
-        OrderedList<Integer> orderedList = new OrderedList<>(true);
+        OrderedList<String> orderedList = new OrderedList<>(true);
         Assert.assertEquals(orderedList.count(), 0);
-        orderedList.add(1);
-        orderedList.add(5);
-        orderedList.add(2);
-        orderedList.add(4);
-        Assert.assertEquals(orderedList.find(56), null);
-        Assert.assertEquals(orderedList.find(1), orderedList.head);
-        Assert.assertEquals(orderedList.find(5), orderedList.tail);
+        orderedList.add("F");
+        orderedList.add("r");
+        orderedList.add("j");
+        orderedList.add("A");
+        Assert.assertEquals(orderedList.count(), 4);
+        Assert.assertEquals(orderedList.find("home"), null);
+        Assert.assertEquals(orderedList.find("A"), orderedList.head);
+        Assert.assertEquals(orderedList.find("F"), orderedList.head.next);
+        Assert.assertEquals(orderedList.find("r"), orderedList.tail);
+        Assert.assertEquals(orderedList.find("j"), orderedList.tail.prev);
     }
 
     @Test

@@ -1,8 +1,7 @@
 import java.util.*;
 
 
-public class OrderedList<T> {
-
+public class OrderedList<T extends Comparable<T>> {
     public Node<T> head, tail;
     private boolean _ascending;
 
@@ -13,33 +12,34 @@ public class OrderedList<T> {
     }
 
     public int compare(T v1, T v2) {
-        if ((Integer) v1 < (Integer) v2) {
+        if (v1.compareTo(v2) < 0) {
             return -1;
         }
-        if ((Integer) v1 > (Integer) v2) {
+        if (v1.compareTo(v2) > 0) {
             return 1;
         }
         return 0;
     }
 
     public void add(T value) {
+        Node<T> node = this.head;
         if (head == null) {
-            Node node = new Node(value);
+            node = new Node<>(value);
             head = node;
             tail = node;
         } else {
-            Node node = this.head;
             while (node != null) {
-                if (compare((T) node.value, value) == 0) {
-                    insertAfter(node, new Node(value));
+                int comparisonResult = compare(node.value, value);
+                if (comparisonResult == 0) {
+                    insertAfter(node, new Node<>(value));
                     break;
                 }
-                if (compare((T) node.value, value) == (_ascending ? 1 : -1)) {
-                    insertAfter(node.prev, new Node(value));
+                if (comparisonResult == (_ascending ? 1 : -1)) {
+                    insertAfter(node.prev, new Node<>(value));
                     break;
                 }
-                if (compare((T) node.value, value) == (_ascending ? -1 : 1) && node == tail) {
-                    insertAfter(tail, new Node(value));
+                if (comparisonResult == (_ascending ? -1 : 1) && node == tail) {
+                    insertAfter(tail, new Node<>(value));
                     break;
                 }
                 node = node.next;
@@ -47,7 +47,7 @@ public class OrderedList<T> {
         }
     }
 
-    public void insertAfter(Node node, Node nodeToInsert) {
+    public void insertAfter(Node<T> node, Node<T> nodeToInsert) {
         if (node == null) {
             nodeToInsert.next = head;
             head.prev = nodeToInsert;
@@ -65,11 +65,10 @@ public class OrderedList<T> {
     }
 
     public Node<T> find(T val) {
-        int flag = _ascending ? 1 : -1;
-        Node node = this.head;
+        Node<T> node = this.head;
 
-        while (node != null && compare((T) node.value, val) != flag) {
-            if (compare((T) node.value, val) == 0)
+        while (node != null && compare(node.value, val) != (_ascending ? 1 : -1)) {
+            if (compare(node.value, val) == 0)
                 return node;
             node = node.next;
         }
@@ -77,14 +76,14 @@ public class OrderedList<T> {
     }
 
     public void delete(T val) {
-        Node node = find(val);
+        Node<T> node = find(val);
 
         if (node != null) {
             deleteNode(node);
         }
     }
 
-    public void deleteNode(Node node) {
+    public void deleteNode(Node<T> node) {
         if (node == this.head) {
             if (node.next == null) {
                 this.head = null;
@@ -111,7 +110,7 @@ public class OrderedList<T> {
     }
 
     public int count() {
-        Node node = this.head;
+        Node<T> node = this.head;
         int length = 0;
 
         while (node != null) {
